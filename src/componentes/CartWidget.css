@@ -1,0 +1,18 @@
+.CartWidget {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .CartWidget > svg {
+    font-size: 24px; 
+  }
+  
+  .item-count {
+    background-color: rgb(229, 91, 91); 
+    color: white; 
+    border-radius: 50%; 
+    padding: 4px 8px; 
+    font-size: 12px; 
+    margin-left: 4px; 
+  }
