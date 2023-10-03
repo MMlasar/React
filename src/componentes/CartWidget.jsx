@@ -1,12 +1,8 @@
 import React from "react";
-import { FaShoppingCart } from "react-icons/fa";
-const CartWidget = () => {
-  const itemCount = 5; 
+
+export const CartWidget = () => {
   return (
-    <div className="CartWidget">
-      <FaShoppingCart /> 
-      <span className="item-count">{itemCount}</span> 
-    </div>
+      <i className="bi bi-cart"></i>
   );
 };
 

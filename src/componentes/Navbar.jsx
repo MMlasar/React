@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Navbar.css";
 import CartWidget from "./CartWidget";
-import "./CartWidget.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +11,7 @@ const Navbar = () => {
         <a href="/home">inicio</a>
         <a href="/about">productos</a>
         <a href="/service">servicios</a>
-        <a href="/contact">Contacto</a>
+        <a href="/contact"><CartWidget /></a>
       </div>
       <div
         className={`nav-toggle ${isOpen && "open"}`}
