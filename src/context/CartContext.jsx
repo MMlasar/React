@@ -20,6 +20,12 @@ const CartProvider = ({ children }) => {
     setCart(newCart);
   };
 
+  const totalprice = () => {
+    return cart.reduce((prev, act) => prev + act.quantity * act.price, 0);
+  }
+
+  const totalproduct = () => cart.reduce((acumulador, productoactual) => acumulador + productoactual.quantity, 0);
+
   const clearCart = () => setCart([]);
 
   const isInCart = (id) => cart.find(product => product.id === id) ? true : false;
@@ -32,6 +38,8 @@ const CartProvider = ({ children }) => {
       isInCart,
       removeProduct,
       addProduct,
+      totalprice,
+      totalproduct,
       cart
     }}>
       {children}

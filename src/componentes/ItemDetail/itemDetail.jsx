@@ -11,6 +11,7 @@ const ItemDetail = ({ data }) => {
     const onAdd = (quantity) => {
         console.log(`compraste ${quantity} unidades`);
         setgocart(true);
+        addProduct (data , quantity);
     }
 
     return (
