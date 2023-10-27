@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from "react";
 import Title from './Title';
-
 import ItemList from "../ItemList";
 import { useParams } from 'react-router-dom';
-
-const films = [
-    { id: 1, price:19000, image: "https://balanzas-ohaus.com/wp-content/uploads/2019/11/01-AX124.jpeg", title: "Balanza ohause" },
-    { id: 2, price:14000,image: "http://www.prec.ar/wp-content/uploads/2022/05/ANCLAJES-yaccesorios.jpg", title: "celda de carga" },
-    { id: 3, price:12000,image: "http://www.prec.ar/wp-content/uploads/2022/02/TRACCION.jpg", title: "celda de traccion" }
-];
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 
 export const ItemListContainer = ({ texto }) => {
     const [data, setData] = useState([]);
 
-    const {categoriaId} = useParams();
+    const { categoriaId } = useParams();
 
     useEffect(() => {
-        const getdata = new Promise(resolve => {
-            setTimeout(() => {
-                resolve(films);
-            }, 1000);
-        });
+        const db = getFirestore();
+        const productsCollection = collection(db, 'products');
+
         if (categoriaId) {
-            getdata.then(res => setData(res.filter(film=> film.categoriaId === categoriaId)));
-        }else{
-            getdata.then(res => setData(res));
+            const filteredQuery = query(productsCollection, where('categoria', '==', categoriaId));
+
+            getDocs(filteredQuery)
+                .then((querySnapshot) => {
+                    const products = [];
+                    querySnapshot.forEach((doc) => {
+                        products.push({ id: doc.id, ...doc.data() });
+                    });
+                    setData(products);
+                })
+                .catch((error) => {
+                    console.error("Error getting documents: ", error);
+                });
+        } else {
+            getDocs(productsCollection)
+                .then((querySnapshot) => {
+                    const products = [];
+                    querySnapshot.forEach((doc) => {
+                        products.push({ id: doc.id, ...doc.data() });
+                    });
+                    setData(products);
+                })
+                .catch((error) => {
+                    console.error("Error getting documents: ", error);
+                });
         }
     }, [categoriaId]);
 
