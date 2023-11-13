@@ -1,53 +1,44 @@
 import React, { useState, useEffect } from "react";
-import Title from '../Title';
 import ItemList from "../ItemList/intemList";
 import { useParams } from 'react-router-dom';
-import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from "../../FireBase/config";
 
-export const ItemListContainer = ({ texto }) => {
-    const [data, setData] = useState([]);
+const ItemListContainer = () => {
+    const [productos, setProductos] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const { categoriaId } = useParams();
+    const categoria = useParams().categoria;
 
     useEffect(() => {
-        const db = getFirestore();
-        const productsCollection = collection(db, 'products');
+        const fetchProductos = async () => {
+            const productosRef = collection(db, "productos");
+            const q = categoria ? query(productosRef, where("categoria", "==", categoria)) : productosRef;
 
-        if (categoriaId) {
-            const filteredQuery = query(productsCollection, where('categoria', '==', categoriaId));
+            try {
+                const resp = await getDocs(q);
+                const productosData = resp.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+                setProductos(productosData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-            getDocs(filteredQuery)
-                .then((querySnapshot) => {
-                    const products = [];
-                    querySnapshot.forEach((doc) => {
-                        products.push({ id: doc.id, ...doc.data() });
-                    });
-                    setData(products);
-                })
-                .catch((error) => {
-                    console.error("Error getting documents: ", error);
-                });
-        } else {
-            getDocs(productsCollection)
-                .then((querySnapshot) => {
-                    const products = [];
-                    querySnapshot.forEach((doc) => {
-                        products.push({ id: doc.id, ...doc.data() });
-                    });
-                    setData(products);
-                })
-                .catch((error) => {
-                    console.error("Error getting documents: ", error);
-                });
-        }
-    }, [categoriaId]);
+        fetchProductos();
+    }, [categoria]);
 
     return (
-        <>
-            <Title greeting={texto} />
-            <ItemList data={data} />
-        </>
+        <div>
+            {loading ? (
+                <p>Cargando productos...</p>
+            ) : (
+                <ItemList productos={productos} titulo="Productos" />
+            )}
+        </div>
     );
-}
+};
 
 export default ItemListContainer;
+

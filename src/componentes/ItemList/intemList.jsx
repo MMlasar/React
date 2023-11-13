@@ -1,10 +1,18 @@
-import Item from '../Item/item';
-import React from 'react';
+import Item from "../Item/item";
+import { toCapital } from "../../helpers/toCapital";
 
-const ItemList = ({data = {}}) => {
-    return (
-        data.map(film => <Item key= {film.id} info={film} />)
-    )
+
+const ItemList = ( {productos, titulo} ) => {
+
+  return (
+    <div className="container">
+        <h2 className="main-title">{toCapital(titulo)}</h2>
+
+        <div className="productos">
+            { productos.map((prod) => <Item producto={prod} key={prod.id} />) }
+        </div>
+    </div>
+  )
 }
 
-export default ItemList;
+export default ItemList

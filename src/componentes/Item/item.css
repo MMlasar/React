@@ -1,10 +1,41 @@
-.film {
-    display: block;
-    width: 300px;
+.producto {
+    display: flex;
+    flex-direction: flex;
+    border-radius: 4px;
+    overflow: hidden;
 }
 
-.film img {
-    width: 100%;
-    height: 100%;
+
+.producto img {
+    width: 30%;
+    height: 30%;
+    gap: 5px;
     object-fit: cover;
 }
+
+
+.producto .ver-mas {
+    text-decoration: none;
+    background-color: wheat;
+    color: white;
+    padding: .5rem;
+    width: max-content;
+    border-radius: .5rem;
+    transition: .2s;
+}
+
+.producto .ver-mas:hover {
+    background-color: black;
+    color: white;
+}
+.producto-detalle {
+    padding-block: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+.producto-detalle img {
+    width: 80%;
+}
+

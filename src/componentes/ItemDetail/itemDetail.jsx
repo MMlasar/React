@@ -1,36 +1,43 @@
-import React, { useState } from 'react';
-import "./itemDetail.css"
-import ItemCount from '../ItemCount/itemCount';
-import { Link } from 'react-router-dom';
-import { useCartContext } from '../../context/CartContext';
+import React, { useContext, useState } from "react";
+import { toCapital } from "../../helpers/toCapital";
+import ItemCount from "../ItemCount/itemCount";
+import { CartContext } from "../../context/CartContext";
 
-const ItemDetail = ({ data }) => {
-    const [gotocart, setgocart] = useState(false);
-    const { addProduct } = useCartContext();
+const ItemDetail = ({ item }) => {
+    const { carrito, agregarAlCarrito } = useContext(CartContext);
+    console.log(carrito);
 
-    const onAdd = (quantity) => {
-        console.log(`Compraste ${quantity} unidades`);
-        setgocart(true);
-        addProduct(data, quantity);
-    }
+    const [cantidad, setCantidad] = useState(1);
+
+    const handleRestar = () => {
+        cantidad > 1 && setCantidad(cantidad - 1);
+    };
+
+    const handleSumar = () => {
+        cantidad < item.stock && setCantidad(cantidad + 1);
+    };
 
     return (
         <div className="container">
-            <div className="detail">
-                <img className="detail__img" src={data.image} alt="" />
-            </div>
-            <div className="content">
-                <h1>{data.title}</h1>
-                <div className="button-container">
-                    {gotocart ? (
-                        <Link to={'/cart'}>Terminar compra</Link>
-                    ) : (
-                        <ItemCount initial={1} stock={5} onAdd={onAdd} />
-                    )}
+            <div className="producto-detalle">
+                <img src={item.imagen} alt={item.titulo} />
+                <div>
+                    <h3 className="titulo">{item.titulo}</h3>
+                    <p className="descripcion">{item.descripcion}</p>
+                    <p className="categoria">Categoría: {toCapital(item.categoria)}</p>
+                    <p className="precio">${item.precio}</p>
+                    <ItemCount
+                        cantidad={cantidad}
+                        handleSumar={handleSumar}
+                        handleRestar={handleRestar}
+                        handleAgregar={() => {
+                            agregarAlCarrito(item, cantidad);
+                        }}
+                    />
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default ItemDetail;

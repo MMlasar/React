@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from "react";
 import ItemDetail from "../ItemDetail/itemDetail";
 import { useParams } from 'react-router-dom';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from "../../FireBase/config";
 
-export const ItemDetailContainer = () => {
-    const [data, setData] = useState({});
-    const { detalleId } = useParams();
+
+const ItemDetailContainer = () => {
+
+    const [item, setItem] = useState(null);
+    const id = useParams().id;
 
     useEffect(() => {
-        const querydb = getFirestore();
-        const queryDoc = doc(querydb, 'products', detalleId);
-        getDoc(queryDoc)
-            .then(res => setData({ id: res.id, ...res.data() }))
-            .catch(error => console.error("Error fetching data: ", error));
-    }, [detalleId]);
 
-    return (
-        <ItemDetail data={data} />
-    );
-};
+      const docRef = doc(db, "productos", id);
+      getDoc(docRef)
+        .then((resp) => {
+          setItem(
+            { ...resp.data(), id: resp.id }
+          );
+        })
 
-export default ItemDetailContainer;
+    }, [id])
+    
+
+  return (
+    <div>
+        {item && <ItemDetail item={item} />}
+    </div>
+  )
+}
+
+export default ItemDetailContainer
+
+
 

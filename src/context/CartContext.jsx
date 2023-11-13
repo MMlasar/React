@@ -1,50 +1,55 @@
-import React, { useState, useContext } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-const cartcontext = React.createContext([]);
+export const CartContext = createContext();
 
-export const useCartContext = () => useContext(cartcontext);
+export const CartProvider = ({ children }) => {
+  const [carrito, setCarrito] = useState([]);
 
-const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const agregarAlCarrito = (item, cantidad) => {
+    const itemAgregado = { ...item, cantidad };
 
-  const addProduct = (item, quantity) => {
-    let newCart;
-    let product = cart.find(product => product.id === item.id);
-    if (product) {
-      product.Quantity += quantity;
-      newCart = [...cart];
+    const nuevoCarrito = [...carrito];
+    const estaEnElCarrito = nuevoCarrito.find((producto) => producto.id === itemAgregado.id);
+
+    if (estaEnElCarrito) {
+      estaEnElCarrito.cantidad += cantidad;
     } else {
-      product = { ...item, Quantity: quantity };
-      newCart = [...cart, product];
+      nuevoCarrito.push(itemAgregado);
     }
-    setCart(newCart);
+    setCarrito(nuevoCarrito);
   };
 
-  const totalprice = () => {
-    return cart.reduce((prev, act) => prev + act.quantity * act.price, 0);
-  }
+  const cantidadEnCarrito = () => {
+    return carrito.reduce((acc, prod) => acc + prod.cantidad, 0);
+  };
 
-  const totalproduct = () => cart.reduce((acumulador, productoactual) => acumulador + productoactual.quantity, 0);
+  const precioTotal = () => {
+    return carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
+  };
 
-  const clearCart = () => setCart([]);
+  const vaciarCarrito = () => {
+    setCarrito([]);
+  };
 
-  const isInCart = (id) => cart.find(product => product.id === id) ? true : false;
-
-  const removeProduct = (id) => setCart(cart.filter(product => product.id !== id));
+  useEffect(() => {
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+  }, [carrito]);
 
   return (
-    <cartcontext.Provider value={{
-      clearCart,
-      isInCart,
-      removeProduct,
-      addProduct,
-      totalprice,
-      totalproduct,
-      cart
-    }}>
+    <CartContext.Provider
+      value={{
+        carrito,
+        agregarAlCarrito,
+        cantidadEnCarrito,
+        precioTotal,
+        vaciarCarrito,
+      }}
+    >
       {children}
-    </cartcontext.Provider>
+    </CartContext.Provider>
   );
-}
+};
 
-export default CartProvider;
+export const useCartContext = () => {
+  return useContext(CartContext);
+};

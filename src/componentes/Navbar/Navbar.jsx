@@ -10,8 +10,8 @@ const Navbar = () => {
       <span className="nav-logo">ML</span>
       <div className={`nav-items ${isOpen && "open"}`}>
         <NavLink to={'/'}>inicio</NavLink>
-        <NavLink to={'/categorias/productos'}>productos</NavLink>
-        <NavLink to={'/categorias/celdas'}>celdas</NavLink>
+        <NavLink to={'/productos/balanzas'}>balanzas</NavLink>
+        <NavLink to={'/productos/celdas'}>celdas</NavLink>
         <NavLink to={"/contact"}><CartWidget /></NavLink>
       </div>
       <div
