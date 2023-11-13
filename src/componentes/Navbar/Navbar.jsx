@@ -12,6 +12,7 @@ const Navbar = () => {
         <NavLink to={'/'}>inicio</NavLink>
         <NavLink to={'/productos/balanzas'}>balanzas</NavLink>
         <NavLink to={'/productos/celdas'}>celdas</NavLink>
+        <NavLink to={'/contacto'}>contactos</NavLink>
         <NavLink to={"/contact"}><CartWidget /></NavLink>
       </div>
       <div
